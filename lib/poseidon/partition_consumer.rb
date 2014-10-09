@@ -137,6 +137,13 @@ module Poseidon
       @offset
     end
 
+    # Set the offset (useful for seeking after initializion).
+    #
+    # @api public
+    def set_offset(offset)
+      @offset = offset
+    end
+
     # Close the connection to the kafka broker
     #
     # @return [Nil]
