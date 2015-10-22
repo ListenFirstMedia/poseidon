@@ -43,6 +43,13 @@ module Poseidon
       failed = []
       producer_response.topic_response.each do |topic_response|
         topic_response.partitions.each do |partition|
+
+          if partition.error != 0
+            msg = @topics[topic_response.topic][partition.partition]
+            msg = (JSON.parse(msg.first.value) rescue msg)
+            raise partition.error_class.new("#{partition.error_class} #{msg}")
+          end
+
           if ALWAYS_RETRYABLE.include?(partition.error_class)
             Poseidon.logger.debug { "Received #{partition.error_class} when attempting to send messages to #{topic_response.topic} on #{partition.partition}" }
             failed.push(*@topics[topic_response.topic][partition.partition])
