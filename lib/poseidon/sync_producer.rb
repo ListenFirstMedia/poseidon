@@ -19,7 +19,7 @@ module Poseidon
       :partitioner => nil,
       :max_send_retries => 3,
       :retry_backoff_ms => 100,
-      :required_acks => 1,
+      :required_acks => 0,
       :ack_timeout_ms => 1500,
       :socket_timeout_ms => 10_000
     }
