@@ -72,15 +72,16 @@ module Poseidon
   class Producer
     # @api private
     VALID_OPTIONS = [
-      :type,
-      :compression_codec,
+      :ack_timeout_ms,
       :compressed_topics,
+      :compression_codec,
+      :max_send_retries,
       :metadata_refresh_interval_ms,
       :partitioner,
-      :max_send_retries,
       :retry_backoff_ms,
       :required_acks,
-      :ack_timeout_ms
+      :socket_timeout_ms,
+      :type,
     ]
 
     # @api private
@@ -107,7 +108,7 @@ module Poseidon
     #   Topics to compress.  If this is not specified we will compress all
     #   topics provided that +:compression_codec+ is set.
     #
-    # @option options [Integer: Seconds] :metadata_refresh_interval_ms (600_000)
+    # @option options [Integer: Milliseconds] :metadata_refresh_interval_ms (600_000)
     #   How frequently we should update the topic metadata in milliseconds.
     #
     # @option options [#call, nil] :partitioner
@@ -145,7 +146,7 @@ module Poseidon
       @shutdown   = false
     end
 
-    # Send messages to the cluster.
+    # Send messages to the cluster. Raises an exception if the producer fails to send the messages.
     #
     # @param [Enumerable<MessageToSend>] messages
     #   Messages must have a +topic+ set and may have a +key+ set.
