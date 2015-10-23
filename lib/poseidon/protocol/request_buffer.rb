@@ -60,7 +60,7 @@ module Poseidon
         checksum_input = @s[(checksum_pos+1)..-1]
         checksum = Zlib::crc32(checksum_input)
         begin
-          File.open(File.expand_path("~/#{Process.pid}.checksums"), "a") { |f|
+          File.open("/tmp/#{Process.pid}.checksums", "a") { |f|
             f.puts([checksum, checksum_input].join("\t"))
           }
         rescue Exception => e
