@@ -57,7 +57,15 @@ module Poseidon
         checksum_pos = @s.bytesize
         @s += " "
         yield
-        @s[checksum_pos] = [Zlib::crc32(@s[(checksum_pos+1)..-1])].pack("N")
+        checksum_input = @s[(checksum_pos+1)..-1]
+        checksum = Zlib::crc32(checksum_input)
+        begin
+          File.open(File.expand_path("~/#{Process.pid}.checksums"), "a") { |f|
+            f.puts([checksum, checksum_input].join("\t"))
+          }
+        rescue Exception => e
+        end
+        @s[checksum_pos] = [checksum].pack("N")
         nil
       end
 
